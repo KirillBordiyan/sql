@@ -1,0 +1,160 @@
+Типы данных, значения NULL, create table, PK, FK, index
+комментарии
+арифметические операции
+логические операторы (and, or, between, not in)
+приоритет выполнения операторов, порядок выполнения запроса
+оператора CASE, IF
+запросы ихменения данных (insert, update, delete)
+
+
+CREATE DATABASE {name} создание бд 
+show databases показ всех БД
+use {name} подключение к БД
+create table {tabel name}
+(
+	column_name_1 column_type_1,
+	column_name_2 column_type_2
+); - создание таблицы с типами полей
+
+
+ТИПЫ:
+INT 4 байта
+DECIMAL(m,n) - хранит числа с заданной точностью m-кол-во всех знаков, n- знаков после запятой (например 5,2 будет иметь от -999,99 до 999,99)
+BOOL - 0 или 1, как true или false
+VARCHAR(N) - n кол-во символов максимальное для строки
+TEXT - подходит для хранения большого оъема текста до 65КВ, например, статьи
+DATE только дата, от 1000-01-01 до 9999-12-31
+TIME толькот время - ч, м, с hh:mm:ss 3 байта
+DATETIME обобщает предыдущие 2 типа 8 байт
+TIMESTAMP хранит дату и время с 1970 года
+бинарные:
+BLOB 65 КБ бинарных данных
+LARGEBLOB - 4gb данных
+
+первиный ключ primary key (pk), со своими свойствами типа Not null и autoincrement
+внешний ключ foreign key (fk), указываетя откуда идет и к какой табличке
+например:
+CREATE TABLE Customers
+(
+id INT PRIMARY KEY AUTO_INCREMENT,
+Age INT,
+FirstName VARCHAR(20) NOT NULL,
+LastName VARCHAR(20) NOT NULL,
+Phone VARCHAR(20) NOT NULL UNIQUE
+);
+CREATE TABLE Orders
+(
+id IND PRIMARY KEY AUTO_INCREMENT,
+CustomerId INT,
+CreatedAt Date,
+FOREIGN KEY (CustomerId) REFERENCES Customers (id) #вот это внешний ключ, который связан с таблицей Customers и колонкой id
+);
+
+Комментарии
+--
+#
+/*
+comment
+*/
+
+Арифметические операции
+сложение SELECT 3+5;
+вычитание SELECT 3-5;
+умножение 3*5;
+умножение числе за пределами диапазона 64бита будет ошибка, не тот тип данных
+деление SELECT 3/5;
+деление SELECT 3/0 выдаст Null
+
+
+Логические операторы:
+AND логическое и, когда оба условия должны выполнится
+OR - или, хотя бы одно выражение было истинным
+NOT - "не", делает из True/false обратное заданному
+
+например, есть таблица mobilephone
+use mobilephone;
+select  * from mobilephone
+where manufacturer = 'Samsung' AND price > 50000
+тут же можно where manufacturer = 'Samsung' OR price > 50000
+тут же  where not manufacturer = 'Samsung'; (любые телефоны не самсунга)
+приоритетность:
+первое всегда отрицание, далее AND и OR самая последняя
+select * from phone
+where manufacturer = 'Samsung' OR NOT price > 30000 AND count > 2
+менять приоритет можно с помощью скобок (...)
+
+Оператор CASE
+CASE
+  when условие 1 then результат 1,
+  when условие 2 then результат 2 и тд
+END AS {названия поля резльутата} - он как бы записывает резльутаты в столбик для каждого выбранного товара
+FROM {tabel name}
+
+Оператор IF
+IF(условие, значение1, значение2) значение1 - если условие true, иначе значение2
+имя колонки будет само по себе условие IF
+обозвать эту колонку можно через оператор AS после условия
+
+
+Запросы изменения данных
+INSERT вставка данных в таблицу
+UPDATE - обновление данных таблицы
+DELETE - даление данных
+
+INSERT INTO {table}(col1, col2..)
+Values 
+(data_col1, data_col2) - запись 1
+(data_col1, data_col2) - запись 2
+
+
+2 варинат использования 
+INSERT INTO {table}(col1, col2...) SELECT {col1, col2, col3} FROM {tabel}- вставка в таблицу новых строк, значения которых формируются из значений строк возвращенных запросом
+
+
+UPDATE {table}
+SET col1 = data1, col2 = data2 ...
+[WHERE условие обновления]
+
+UPDATE phones
+SET price = price + 3000;
+
+
+DELETE FROM {table}
+[WHERE условие удаления]
+
+DELETE FROM phones
+where manufacturer = 'Huawei';
+
+при выборке можно также использовать параметн IN
+SELECT * FROM pnone
+where manufacturer IN ("условие1", "условие2" и тд);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

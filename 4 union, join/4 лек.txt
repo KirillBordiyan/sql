@@ -1,0 +1,106 @@
+UNION, UNION ALL
+JOIN - RIGHT LEFT INNER FULL
+подзапросы join, in, exists, select
+CREATE TABLE SELECT
+порядок выполнения запроса
+
+
+UNION
+SELECT 1,2 UNION SELECT 'a', 'b';
+получим табличку 2х2
+разныое кол-во строк и столбцов может привести к ошибке
+
+например, если из 2 таблиц мы выбираем ФИО типа
+SELECT FN, LN FROM table1
+UNION SELECT FN, LN, FROM table2
+ и у нас есть повторения в значениях, то они будут удаляться, останется 1 уникальная запись
+
+
+UNION ALL решает проблему уникальности
+SELECT FN, LN
+FROM table1
+UNION ALL SELECT FN, LN
+FROM table2
+будут выведены абсолютно все строки, включая повторы
+
+
+
+
+JOINы
+INNER JOIN - только соответствие 2 таблиц
+FULL JOIN - объединение полностью двух таблиц
+LEFT JOIN - клонирование левой и удовлетворяющих строк правой
+RIGHT JOIN - клонирование правой+ данные выборки из левой
+CROSS JOIN - возвращается все записи из обеих таблиц
+
+SELECT col
+FROM table1
+	[INNER] JOIN tabl2
+	ON condition1
+	[INNER JOIN tabl3
+	ON condition2]
+
+
+OUTER JOIN
+Select col
+FROM tabl1
+{LEFT|RIGHT} [OUTER] JOIN tabl2 ON cond1
+[{LEFT|RIGHT} [OUTER] JOIN tabl3 on cond2]
+происходит выборка колонок из таблицы1 (левой) и клонирование данных подходящих по условию из таблицы2(правой)
+соответственно, работа с таблицами будет меняться в зависимости от условия RIGHT|LEFT
+
+
+Разница INNER и LEFT(RIGHT) в том, что INNER даст совпадения что из правой, что из левой табличек
+а RIGHT|LEFT копирует одну из них полностью, а потом добавляет что-то из второй
+
+
+FULL JOIN объединение даннхы таблиц
+в бенче не сделать напрямую, примерно можно сделать через UNION
+
+CROSS JOIN - как умножение матриц: первая строка левой таблицы умножается на все строки правой
+
+
+Подзапросы - IN
+SELECT * FROM Products
+WHERE Id IN (SELECT ProdId FROM Orders)
+выборка товаров из таблицы Prod, на которые есть заказы в таблицу Orders
+
+SELECT * FROM Products
+WHERE Id NOT IN (SELECT ProdId FROM Orders)
+выбор тех, на которые нет заказов в Orders
+
+
+EXISTS
+WHERE [NOT] EXISTS (подзапрос)
+
+
+CREATE TABLE SELECT
+CREATE TABLE SELECT yourTable SELECT * FROM yourOrig
+
+
+
+
+
+последовательность запроса есть в прошлой лк
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

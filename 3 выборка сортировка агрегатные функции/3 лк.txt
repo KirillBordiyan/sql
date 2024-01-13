@@ -1,0 +1,136 @@
+сортировка по условиям
+ограничения top, limit, fetch
+уникальность значений distinct
+группировка GROUP BY
+агрегатные функции count, avg, sum, обработка null
+использование having
+приоритет операций
+
+
+
+Сортировка:
+ORDER BY - по возрастанию (ASC) - канон, если не указан DESC
+SELECT * FROM {table}
+[WHERE condition]
+ORDER BY {expr} [ASC | DESC]
+
+при сложных запроса типа 
+SELECT Prname, count * price AS Total
+from [table]
+ORDER BY Total (==count * price)
+можно как раз-таки использовать псевдонимы AS, чтобы не увеличивать формулу
+
+
+
+Ограничение выборки LIMIT
+SELECT {col}
+FROM {table}
+LIMIT [missrow-N, ] printrow-M
+если указать только M (один параметр) - будут выведены первые M-строк
+если оба одновременно, то N будет пропущенно, а следующие M- выведены
+
+
+для MS SQL Server есть аналог в виде команды TOP:
+SELECT TOP 2 * FROM {table}
+кол-во 2 строк со всеми полями
+
+
+fetch:
+SELECT col FROM table ORDER BY colname OFFSET rows_to_be_skipped FETCH NEXT n ROWS ONLY;
+пример, где будут исключаться m строк и выбирать след p строк, будут выведены от m+1 до m+1+p:
+SELECT colname FROM table ORDER BY colname OFFSET m ROWS FETCH NEXT p ROWS ONLY;
+OFFSET - сключает строки
+FETCH - начинает вывод с текущей
+
+
+distinct:
+SELECT DISTINCT manufacturer FROM Products;
+получим уникальные значения поля manufacturer
+
+
+Группировка GROUP BY
+SELECT столбцы
+FROM таблица
+[WHERE условие фильтрации строк]
+[GROUP BY столбцы для группировки]
+[HAVING условие фильтрации групп]
+[ORDER BY столбцы для сортировки]
+
+
+
+Агрегатные функции
+AVG- вычисляет среднее значение
+SUM вычисляет сумму значений
+MIN вычисляет наименьшее значение
+MAX вычисляет наибольшее значение
+COUNT вычсляет кол-во строк в запросе
+
+SELECT AVG(colname) AS avg_colname FROM table;
+если добавить WHERE в это выражение, мы получим доп фильтр для AVG
+
+SELECT COUNT(*) FROM table; - получим ол-во строк из таблицы
+
+SELECT MIN(price), MAx(price) FROM table; - получим минимальное и максимальное значение из таблицы в указанных колонках
+
+
+
+Использование HAVING 
+SELECT expr1, expr2,
+	aggregate_func(expt)
+FROM table
+[WHERE condition]
+ROUP BY expr1, expr2
+
+aggregate_func-  функция типа SUM,COUNT,MAX,MIN,AVG
+expr1, expr2 -  выражения не заключены в агрегированную функци и должны быть включены в предложение GROUP BY
+WHERE cond - необязательное условие выбора записей
+HAVING cond - доп условие только к агрегированным резльтатам для ограничения групп возвращаемых строк
+
+например, вывести производителей, для которых кол-во товара больше 1
+SELECT manufacturer, COUNT(*) as modelsCount
+FROM product
+GROUP BY manufacturer
+HAVING COUNT(*) > 1
+
+логикая такая: мы выбираем поля проиводителя и считаем, сколько каждый из них попадался
+потом проверяем для агрегатной функции условие > 1 или нет и оставляем строку, если да
+
+
+для примера HAVING:
+SELECT manufacturer, COUNT(*) AS Model, SUM(ProdCount) AS UNITS
+FROM Product
+WHERE Price * ProdCount > 80000
+GROUP BY manufacturer
+HAVING SUM(ProdCOunt) > 2
+ORDER BY Units DESC;
+
+суть:
+выбираем производителя, считаем их повторения в колонку Model, суммируем кол-во товара в столбик Units
+потом проверяем, чтобы общая стоимость товара была больше 80к
+группируем по столбику производителя (сразу писал)
+и смотрим, чтобы условие кол-ва товара > 2 выполнялось
+вывод делаем от большего к меньшему
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
