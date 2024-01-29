@@ -20,6 +20,25 @@ CREATE TABLE IF NOT EXISTS Orders
 select * from Orders;
 */
 
-SELECT 3+5;
-SELECT 3-5;
-SELECT 3*5;
+
+
+DELIMITER //
+CREATE PROCEDURE secondsToTimeFormat(IN seconds INT, OUT timeFormat VARCHAR(50))
+BEGIN
+    DECLARE days INT;
+    DECLARE hours INT;
+    DECLARE minutes INT;
+    SET days = seconds DIV 86400;
+    SET seconds = seconds % 86400;
+    SET hours = seconds DIV 3600;
+    SET seconds = seconds % 3600;
+    SET minutes = seconds DIV 60;
+    SET seconds = seconds % 60;
+    SET timeFormat = CONCAT(days, ' days ', hours, ' hours ', minutes, ' minutes ', seconds, ' seconds');
+END //
+DELIMITER ;
+
+CALL secondsToTimeFormat(123456, @timeFormat);
+SELECT @timeFormat;
+
+

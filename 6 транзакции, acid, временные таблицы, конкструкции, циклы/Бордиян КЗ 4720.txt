@@ -1,0 +1,48 @@
+Создайте процедуру ИЛИ функцию, которая принимает кол-во сек и формат их в кол-во дней, часов, минут и секунд.
+Пример: 123456 ->'1 days 10 hours 17 minutes 36 seconds ':
+
+DELIMITER //
+CREATE PROCEDURE timeFromSecFormat(IN seconds INT, OUT timeFormat VARCHAR(50))
+BEGIN
+    DECLARE days INT;
+    DECLARE hours INT;
+    DECLARE minutes INT;
+    SET days = seconds DIV 86400;
+    SET seconds = seconds % 86400;
+    SET hours = seconds DIV 3600;
+    SET seconds = seconds % 3600;
+    SET minutes = seconds DIV 60;
+    SET seconds = seconds % 60;
+    SET timeFormat = CONCAT(days, ' days ', hours, ' hours ', minutes, ' minutes ', seconds, ' seconds');
+END //
+DELIMITER ; -- эта часть создает соответствующие переменные и соединяет это все в одну строку
+
+
+CALL timeFromSecFormat(123456, @timeFormat);
+SELECT @timeFormat; -- это вызов метода, первый параметр - секунды, второй - результат преобразований, который потом забираем SELECT
+
+
+
+
+
+Выведите только четные числа от 1 до 10 (Через цикл).
+Пример: 2,4,6,8,10:
+
+DELIMITER //
+CREATE PROCEDURE printEvenNumbers()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 10 DO
+        IF i % 2 = 0 THEN
+            SELECT i;
+        END IF;
+        SET i = i + 1;
+    END WHILE;
+END //
+DELIMITER ; -- метод цикла, где каждый шаг происходит SELECT параметра i
+
+CALL printEvenNumbers(); -- вызов метода
+
+
+
+
